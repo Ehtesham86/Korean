@@ -37,6 +37,28 @@ router.post("/", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error", details: err.message });
   }
 });
+router.put("/:id", async (req, res) => {
+  try {
+    console.log("Updating Lead ID:", req.params.id); // Log the ID
+    console.log("Updated Data:", req.body); // Log the incoming data
+
+    const updatedLead = await MarginData.findByIdAndUpdate(
+      req.params.id, // Find by ID
+      req.body, // Update with new data
+      { new: true, runValidators: true } // Return updated document & validate fields
+    );
+
+    if (!updatedLead) {
+      return res.status(404).json({ error: "Lead not found" });
+    }
+
+    res.status(200).json({ message: "Lead updated successfully", lead: updatedLead });
+  } catch (err) {
+    console.error("Error updating lead:", err.message);
+    res.status(500).json({ error: "Internal Server Error", details: err.message });
+  }
+});
+
 
 
 

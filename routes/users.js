@@ -3,10 +3,28 @@ const bcrypt = require("bcrypt");
 const _ = require("lodash");
 const jwt = require("jsonwebtoken");
 var router = express.Router();
-const { User } = require("../models/user.js");
+const User = require("../models/user.js"); // Remove destructuring
 const auth = require("../middleware/auth.js");
 const crypto=require('crypto')
 
+/* POST User signin account. */
+router.post("/api/auth/signin", async (req, res) => {
+  //  Now find the user by their email address
+  let user = await User.findOne({ email: req.body.email });
+  if (!user) {
+    return res.status(400).send("Incorrect email or password.");
+  }
+
+  // Then validate the Credentials in MongoDB match
+  // those provided in the request
+  const validPassword = await bcrypt.compare(req.body.password, user.password);
+  if (!validPassword) {
+    return res.status(400).send("Incorrect email or password.");
+  }
+  
+  const token = jwt.sign({ _id: user._id }, process.env.ACCESS_TOKEN_SECRET);
+  res.send({ access_token: token });
+});
 
 router.post("/", async (req, res) => {
   try {
@@ -56,24 +74,6 @@ router.post("/api/auth/signup", async function (req, res, next) {
   }
 });
 
-/* POST User signin account. */
-router.post("/api/auth/signin", async (req, res) => {
-  //  Now find the user by their email address
-  let user = await User.findOne({ email: req.body.email });
-  if (!user) {
-    return res.status(400).send("Incorrect email or password.");
-  }
-
-  // Then validate the Credentials in MongoDB match
-  // those provided in the request
-  const validPassword = await bcrypt.compare(req.body.password, user.password);
-  if (!validPassword) {
-    return res.status(400).send("Incorrect email or password.");
-  }
-  
-  const token = jwt.sign({ _id: user._id }, process.env.ACCESS_TOKEN_SECRET);
-  res.send({ access_token: token });
-});
 
 
 // // Reset passowrd
