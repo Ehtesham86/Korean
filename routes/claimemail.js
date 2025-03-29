@@ -25,6 +25,8 @@ router.post("/", async (req, res, next) => {
           bodyPlain: req.body['body-plain'] || "",
           bodyHtml: req.body['body-html'] || "",
           text: req.body.text || "",
+          userId: req.body.userId || "",
+
       });
 
       const result = await claimemail.save();
@@ -40,20 +42,26 @@ router.post("/", async (req, res, next) => {
       });
   }
 });
-router.get("/", (req, res, next) => {
-    Claimemail.find()
-    .then((result) => {
+router.get("/:userId", (req, res, next) => {
+  const { userId } = req.params;  // Get userId from the URL path
+
+  Claimemail.find({ userId })  // Assuming Claimemail model has a userId field
+  .then((result) => {
+      if (result.length === 0) {
+          return res.status(404).json({ message: "No data found for the given userId" });
+      }
       res.status(200).json({
-        claimemailData: result,
+          claimemailData: result,
       });
-    })
-    .catch((err) => {
+  })
+  .catch((err) => {
       console.log(err);
       res.status(500).json({
-        error: err,
+          error: err,
       });
-    });
+  });
 });
+
 
 router.get("/:id", (req, res, next) => {
   console.log(req.params.id);

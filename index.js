@@ -13,13 +13,9 @@ var checkoutRoute = require("./routes/checkout.js");
 var registerRouter = require("./routes/Register.js");
 var usersRouter = require("./routes/users.js");
 var ClaimemailRoute = require("./routes/claimemail.js");
-
-const productRoute=require('./routes/product.js');
-const matterssesRoute=require('./routes/mattresses.js');
-const bedsRoute=require('./routes/beds.js');
-const salesRoute=require('./routes/sales.js');
-const accessoriesRoute=require('./routes/accessories.js');
-// const cartRoute=require('./routes/cart')
+const leadsCRUD = require("./routes/leadsCRUD");
+const MarginData = require("./routes/MarginData");
+   // const cartRoute=require('./routes/cart')
 const serviceRoute=require('./routes/service.js');
 const serviceFormRoute=require('./routes/serviceForm.js');
 var resetpasswordRouter = require("./routes/reset-password.js");
@@ -56,12 +52,9 @@ app.use("/register", registerRouter);
 app.use("/auth", authRouter);
 app.use("/users", usersRouter);
 
-app.use('/product',productRoute)
-app.use('/mattresses',matterssesRoute)
-app.use('/beds',bedsRoute)
-app.use('/accessories',accessoriesRoute)
-app.use('/sales',salesRoute)
-app.use('/service',serviceRoute)
+app.use("/leads", leadsCRUD);
+app.use("/MarginData", MarginData);
+  app.use('/service',serviceRoute)
 app.use('/Claimemail',ClaimemailRoute)
 
 app.use('/checkout',checkoutRoute)

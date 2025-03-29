@@ -12,7 +12,8 @@ const claimemailSchema = new mongoose.Schema({
     body: String,
     bodyPlain: String,
     bodyHtml: String,
-    text: String
+    text: String,
+    userId:String
 });
 
 module.exports=mongoose.model('Claimemail',claimemailSchema)
